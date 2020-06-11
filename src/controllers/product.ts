@@ -22,6 +22,21 @@ export const findAll = async (
   }
 }
 
+export const findByQuery = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const query = req.query
+
+    // const getQuery = await Product.find({ id: query })
+    res.json(await ProductService.findByQuery(query))
+  } catch (error) {
+    next(new NotFoundError('Products not found', error))
+  }
+}
+
 // GET /products/:id
 export const findById = async (
   req: Request,

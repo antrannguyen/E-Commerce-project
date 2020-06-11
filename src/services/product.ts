@@ -4,6 +4,22 @@ function findAll(): Promise<ProductDocument[]> {
   return Product.find().exec() // Return a Promise
 }
 
+function findByQuery(
+  getQuery: Partial<ProductDocument>
+): Promise<ProductDocument[]> {
+  console.log('131424', getQuery)
+
+  return Product.find(getQuery)
+    .exec() // .exec() will return a true Promise
+    .then((products) => {
+      if (!products) {
+        throw new Error(`Product ${products} not found`)
+      }
+      console.log('fsfagsg', products)
+      return products
+    })
+}
+
 function findById(id: string): Promise<ProductDocument> {
   return Product.findById(id)
     .exec() // .exec() will return a true Promise
@@ -48,8 +64,9 @@ function deleteProduct(productId: string): Promise<ProductDocument | null> {
 
 export default {
   findAll,
-  createProduct,
+  findByQuery,
   findById,
+  createProduct,
   updateProduct,
   deleteProduct,
 }
