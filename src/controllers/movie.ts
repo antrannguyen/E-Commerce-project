@@ -9,7 +9,7 @@ import {
 } from '../helpers/apiError'
 
 // POST /movies
-export const createMovie = async (
+export const create = async (
   req: Request,
   res: Response,
   next: NextFunction

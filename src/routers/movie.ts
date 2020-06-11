@@ -1,7 +1,7 @@
 import express from 'express'
 
 import {
-  createMovie,
+  create,
   findById,
   deleteMovie,
   findAll,
@@ -15,6 +15,6 @@ router.get('/', findAll)
 router.get('/:movieId', findById)
 router.put('/:movieId', updateMovie)
 router.delete('/:movieId', deleteMovie)
-router.post('/', createMovie)
+router.post('/', create)
 
 export default router
