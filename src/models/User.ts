@@ -1,12 +1,12 @@
 import mongoose, { Document } from 'mongoose'
 
 export type UserDocument = Document & {
-  id: string
-  firstname: string
-  lastname: string
-  email: string
-  isAdmin: boolean
-  isBanned: boolean
+  id: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  isAdmin: boolean;
+  isBanned: boolean;
 }
 
 const userSchema = new mongoose.Schema({
@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
   },
   firstname: {
     type: String,
-    required: true,
+    // required: true,
   },
   lastname: {
     type: String,
@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    // required: true,
+    required: true,
   },
   password: {
     type: String,

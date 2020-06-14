@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import {validationResult} = require('express-validator')
+import { check, validationResult } from 'express-validator'
 
 import User from '../models/User'
 import UserService from '../services/user'
@@ -16,13 +16,12 @@ export const registerUser = async (
   next: NextFunction
 ) => {
   try {
-   
-    console.log('body', req.body)
-    res.send("work?")
     const errors = validationResult(req)
-    if (!errors.isEmpty() ){
+    console.log('body', req.body)
+    res.send('work?')
+    if (!errors.isEmpty()) {
       // next(new BadRequestError('Invalid Request', error))
-      return next(res.status(400).json({errors: errors.array()}))
+      return next(res.status(400).json({ errors: errors.array() }))
     }
     res.json(await UserService.findAll())
   } catch (error) {
