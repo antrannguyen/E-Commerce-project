@@ -9,6 +9,7 @@ import {
   InternalServerError,
   UnauthorizedError,
 } from '../helpers/apiError'
+import { any } from 'bluebird'
 
 export const registerUser = async (
   req: Request,
@@ -25,7 +26,7 @@ export const registerUser = async (
     }
     res.json(await UserService.findAll())
   } catch (error) {
-    const errors = validationResult(req)
+    // const errors = validationResult(req)
     // if (!errors.isEmpty() ){
     //   // next(new BadRequestError('Invalid Request', error))
     //   return res.status(400).json({errors: errors.array()})
