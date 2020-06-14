@@ -12,8 +12,9 @@ import bluebird from 'bluebird'
 
 import { MONGODB_URI, SESSION_SECRET } from './util/secrets'
 
-// import movieRouter from './routers/movie'
+import movieRouter from './routers/movie'
 import eCommerceRouter from './routers/eCommerce'
+import userRouter from './routers/user'
 
 import apiErrorHandler from './middlewares/apiErrorHandler'
 import apiContentType from './middlewares/apiContentType'
@@ -49,10 +50,13 @@ app.use(lusca.xframe('SAMEORIGIN'))
 app.use(lusca.xssProtection(true))
 
 // Use MOVIE router
-// app.use('/api/v1/movies', movieRouter)
+app.use('/api/v1/movies', movieRouter)
 
 // Use PRODUCT router
-app.use('/api/v1/eCommerce', eCommerceRouter)
+app.use('/api/v1/eCommerce/products', eCommerceRouter)
+
+// Use USER router
+app.use('/api/v1/eCommerce/users', userRouter)
 
 // Custom API error handler
 app.use(apiErrorHandler)

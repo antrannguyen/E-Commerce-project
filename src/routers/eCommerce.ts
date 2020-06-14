@@ -11,12 +11,12 @@ import {
 
 const router = express.Router()
 
-// Every path we define here will get /api/v1/eCommerce prefix
-router.get('/products', findAll)
-router.post('/products', createProduct)
-router.get('/products/search', findByQuery)
-router.get('/products/:id', findById)
-router.put('/products/:id', updateProduct)
-router.delete('/products/:id', deleteProduct)
+// Every path we define here will get /api/v1/eCommerce/products prefix
+router.get('/', findAll)
+router.post('/', createProduct)
+router.get('/search', findByQuery)
+router.get('/:id', findById)
+router.put('/:id', updateProduct)
+router.delete('/:id', deleteProduct)
 
 export default router
