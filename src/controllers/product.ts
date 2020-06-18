@@ -29,7 +29,6 @@ export const findByQuery = async (
 ) => {
   try {
     const query = req.query
-
     // const getQuery = await Product.find({ id: query })
     res.json(await ProductService.findByQuery(query))
   } catch (error) {
@@ -61,13 +60,13 @@ export const createProduct = async (
 
     const foundName = await Product.findOne({ name: req.body.name })
     if (!foundName) {
-      const product = new Product({
+      const newProduct = new Product({
         name,
         category,
         variant,
       })
-      await ProductService.createProduct(product)
-      res.json(product)
+      await ProductService.createProduct(newProduct)
+      res.json(newProduct)
     } else {
       res.json(`The name ${req.body.name} created, please choose other name`)
     }

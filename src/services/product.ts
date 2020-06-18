@@ -31,8 +31,8 @@ function findById(id: string): Promise<ProductDocument> {
     })
 }
 
-function createProduct(product: ProductDocument): Promise<ProductDocument> {
-  return product.save()
+function createProduct(newProduct: ProductDocument): Promise<ProductDocument> {
+  return newProduct.save()
 }
 
 function updateProduct(
