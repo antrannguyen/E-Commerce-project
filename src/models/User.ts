@@ -1,5 +1,5 @@
 import mongoose, { Document } from 'mongoose'
-// import { isEmail } from 'validator'
+import { isEmail } from 'validator'
 
 export type UserDocument = Document & {
   id: string;

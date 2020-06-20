@@ -1,6 +1,11 @@
 import express from 'express'
-import { findAll, createUser, loginUser, logOutUser } from '../controllers/user'
-// import { createUser1 } from '../controllers/testwithJS.js'
+import {
+  findAll,
+  createUser,
+  loginUser,
+  logOutUser,
+  loginUserWithGoogle,
+} from '../controllers/user'
 
 const router = express.Router()
 
@@ -14,9 +19,9 @@ router.get('/', findAll)
 router.post('/', createUser)
 router.post('/login', loginUser) // with email and pass
 router.post('/login', logOutUser) // with email and pass
+router.post('/googleLogin', loginUserWithGoogle)
 
 // router.get('/:id', findById)
-// router.post('/googleLogin', loginUserWithGoogle) // do this with Google
 // router.post('/logOutGoogle', logoutUser) // do this with Google
 
 // router.put('/updateProfile', updateProfile)
