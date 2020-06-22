@@ -9,6 +9,8 @@ import path from 'path'
 import mongoose from 'mongoose'
 import passport from 'passport'
 import bluebird from 'bluebird'
+import morgan from 'morgan'
+import cors from 'cors'
 
 import { MONGODB_URI, SESSION_SECRET } from './util/secrets'
 
@@ -18,6 +20,8 @@ import userRouter from './routers/user'
 
 import apiErrorHandler from './middlewares/apiErrorHandler'
 import apiContentType from './middlewares/apiContentType'
+
+import { passportGoogleIdToken } from './config/googleToken'
 
 const app = express()
 const mongoUrl = MONGODB_URI
@@ -48,13 +52,31 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(lusca.xframe('SAMEORIGIN'))
 app.use(lusca.xssProtection(true))
+app.use(cors())
+app.use(
+  morgan((tokens: any, req: any, res: any) => {
+    return [
+      tokens.method(req, res),
+      ' ',
+      tokens.url(req, res),
+      ' ',
+      tokens.status(req, res),
+      ' ',
+      tokens.res(req, res, 'content-length'),
+      ' - ',
+      tokens['response-time'](req, res),
+      'ms ',
+      JSON.stringify(req.body),
+    ].join('')
+  })
+)
+
+passport.use(passportGoogleIdToken())
 
 // Use MOVIE router
 app.use('/api/v1/movies', movieRouter)
-
 // Use PRODUCT router
 app.use('/api/v1/eCommerce/products', eCommerceRouter)
-
 // Use USER router
 app.use('/api/v1/eCommerce/users', userRouter)
 

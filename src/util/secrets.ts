@@ -38,3 +38,6 @@ if (!MONGODB_URI) {
   }
   process.exit(1)
 }
+
+export const CLIENT_ID =
+  '333233688208-as2rcli62b49cg6ofmh49md6fsqiphnb.apps.googleusercontent.com'

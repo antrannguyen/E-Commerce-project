@@ -3,8 +3,7 @@ import { isEmail } from 'validator'
 
 export type UserDocument = Document & {
   id: string;
-  firstname: string;
-  lastname: string;
+  name: string;
   password: string;
   email: string;
   isAdmin: boolean;
@@ -16,10 +15,7 @@ const userSchema = new mongoose.Schema(
     id: {
       type: String,
     },
-    firstname: {
-      type: String,
-    },
-    lastname: {
+    name: {
       type: String,
     },
     email: {
@@ -34,7 +30,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       minlength: [8, 'Minimum of letter is 8'],
-      required: true,
+      // required: true,
     },
     isAdmin: {
       type: Boolean,

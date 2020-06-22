@@ -15,7 +15,7 @@ const router = express.Router()
 router.get('/', findAll)
 router.get('/:id', findById)
 router.get('/:search', findByQuery)
-router.post('/', createProduct)
+// router.post('/', verifyToken ,createProduct)//admin need token
 router.put('/:id', updateProduct)
 router.delete('/:id', deleteProduct)
 

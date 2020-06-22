@@ -116,3 +116,18 @@ export const logOutUser = async (
 
   return res.send(req.body)
 }
+
+// GET /auth/google
+export const createToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    console.log('abc')
+    console.log('user', req.user)
+    res.send(req.user ? 200 : 401)
+  } catch (error) {
+    next(new BadRequestError('Duplicate email', error))
+  }
+}
