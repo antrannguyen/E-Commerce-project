@@ -1,5 +1,6 @@
 import express from 'express'
 
+import verifyJWT from '../middlewares/jwt'
 import {
   findAll,
   createProduct,
@@ -15,7 +16,7 @@ const router = express.Router()
 router.get('/', findAll)
 router.get('/:id', findById)
 router.get('/:search', findByQuery)
-// router.post('/', verifyToken ,createProduct)//admin need token
+router.post('/', verifyJWT, createProduct) //admin need token
 router.put('/:id', updateProduct)
 router.delete('/:id', deleteProduct)
 
