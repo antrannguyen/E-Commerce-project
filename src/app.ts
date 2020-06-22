@@ -72,6 +72,8 @@ app.use(
 )
 
 passport.use(passportGoogleIdToken())
+// app.use(passport.initialize())
+// app.use(passport.session())
 
 // Use MOVIE router
 app.use('/api/v1/movies', movieRouter)

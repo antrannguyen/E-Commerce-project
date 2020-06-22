@@ -1,8 +1,10 @@
 import { Request, Response, NextFunction } from 'express'
 import { check, validationResult } from 'express-validator'
 import bcrypt from 'bcrypt-nodejs'
+import jwt from 'jsonwebtoken'
+import { SESSION_SECRET } from '../util/secrets'
 
-import User from '../models/User'
+import User, { UserDocument } from '../models/User'
 import UserService from '../services/user'
 import {
   NotFoundError,
@@ -11,6 +13,7 @@ import {
   UnauthorizedError,
 } from '../helpers/apiError'
 import { any } from 'bluebird'
+import { authorize } from 'fbgraph'
 
 // GET /users
 export const findAll = async (
@@ -124,9 +127,44 @@ export const createToken = async (
   next: NextFunction
 ) => {
   try {
-    console.log('abc')
     console.log('user', req.user)
-    res.send(req.user ? 200 : 401)
+
+    const { name, email, isAdmin } = req.user as UserDocument
+
+    const data = {
+      name,
+      email,
+      isAdmin,
+    }
+
+    const createJWT = await jwt.sign(data, SESSION_SECRET, { expiresIn: '1h' })
+
+    // res.sendStatus(req.user ? 200 : 401)
+    res.json({ createJWT })
+
+    // console.log('user', req.user)
+
+    // const verifyJWT = jwt.verify(createJWT, SESSION_SECRET)
+
+    // const checkAdmin: boolean = verifyJWT.isAdmin
+  } catch (error) {
+    next(new BadRequestError('Duplicate email', error))
+  }
+}
+
+// GET /auth/google
+export const verifyJWT = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const token = req.headers['authorization']?.replace('Bearer ', '') || ''
+    const decoded = jwt.verify(token, SESSION_SECRET) as UserDocument
+    const user = await User.findOne({ email: decoded.email })
+    const checkAdmin = decoded.isAdmin
+    req.user = user as UserDocument
+    next()
   } catch (error) {
     next(new BadRequestError('Duplicate email', error))
   }

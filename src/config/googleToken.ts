@@ -1,6 +1,6 @@
 import GoogleTokenStrategy from 'passport-google-id-token'
 import { CLIENT_ID } from '../util/secrets'
-import User from '../models/User'
+import User from '../services/user'
 
 export const passportGoogleIdToken = () =>
   new GoogleTokenStrategy(

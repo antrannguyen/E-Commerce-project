@@ -23,7 +23,7 @@ router.post('/login', loginUser) // with email and pass
 router.post('/login', logOutUser) // with email and pass
 router.post(
   '/auth/google',
-  passport.authenticate('google-id-token'),
+  passport.authenticate('google-id-token', { session: false }),
   createToken
 )
 

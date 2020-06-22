@@ -24,7 +24,7 @@ function createUserByGoogleAcount(
 async function findEmailandCreate(
   payload: Partial<UserDocument>
 ): Promise<UserDocument> {
-  const user = await User.findOne(payload.email).exec()
+  const user = await User.findOne({ email: payload.email }).exec()
 
   if (user) {
     return user

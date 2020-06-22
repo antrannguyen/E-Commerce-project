@@ -19,6 +19,18 @@ function App() {
     console.log(response)
   }
 
+  const getProducts = async () => {
+    const res = await axios.get(
+      'http://localhost:3000/api/v1/eCommerce/products',
+      {
+        headers: {
+          authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW4gVHJhbiIsImVtYWlsIjoiYW4udHJhbkBpbnRlZ3JpZnkuaW8iLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNTkyODM4NTg4LCJleHAiOjE1OTI4NDIxODh9.70zhNZZA6uacBkmcHC870na5fKHB-aUy0XiFwtV727c`,
+        },
+      }
+    )
+    console.log(res)
+  }
+
   return (
     <div>
       <h2> Login Google</h2>
@@ -29,6 +41,9 @@ function App() {
           onSuccess={responseGoogle}
           onFailure={responseGoogle}
         />
+      </div>
+      <div>
+        <button onClick={getProducts}>Get Products</button>
       </div>
     </div>
   )
