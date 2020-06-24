@@ -1,25 +1,24 @@
 import express from 'express'
+import passport from 'passport'
+
 import {
   findAll,
+  findById,
   createUser,
   loginUser,
   logOutUser,
-  createToken,
 } from '../controllers/user'
-
-import passport from 'passport'
+import { createToken } from '../controllers/auth'
+import { verifyJWT, requireAdminandVerifyJWT } from '../controllers/auth'
+import { userValidationRules, validate } from '../middlewares/validator'
 
 const router = express.Router()
 
-//<-----Please ignore, I just want to try with express validator
-// import { userValidationRules, validate } from '../middlewares/validator'
-// router.post('/', validate(userValidationRules()), createUser)
-// ---->
-
 // Every path we define here will get /api/v1/eCommerce/users prefix
-router.get('/', findAll)
+router.get('/', verifyJWT, findAll)
+router.get('/:id', verifyJWT, findById)
 router.post('/', createUser)
-router.post('/login', loginUser) // with email and pass
+router.post('/login', validate(userValidationRules()), loginUser) // with email and pass
 router.post('/login', logOutUser) // with email and pass
 router.post(
   '/auth/google',
@@ -27,7 +26,6 @@ router.post(
   createToken
 )
 
-// router.get('/:id', findById)
 // router.post('/logOutGoogle', logoutUser) // do this with Google
 // router.put('/updateProfile', updateProfile)
 // router.post('/', forgetPassRequest)

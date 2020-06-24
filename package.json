@@ -25,10 +25,12 @@
     "watch-debug": "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve-debug\""
   },
   "dependencies": {
+    "@types/bcryptjs": "^2.4.2",
     "@types/jsonwebtoken": "^8.3.7",
     "async": "^3.2.0",
     "axios": "^0.19.2",
     "bcrypt-nodejs": "^0.0.3",
+    "bcryptjs": "^2.4.3",
     "bluebird": "^3.7.2",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",

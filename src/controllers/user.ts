@@ -1,19 +1,19 @@
 import { Request, Response, NextFunction } from 'express'
 import { check, validationResult } from 'express-validator'
-import bcrypt from 'bcrypt-nodejs'
+import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { SESSION_SECRET } from '../util/secrets'
+export {}
 
 import User, { UserDocument } from '../models/User'
 import UserService from '../services/user'
+import { JWT_SECRET } from '../util/secrets'
 import {
   NotFoundError,
   BadRequestError,
   InternalServerError,
   UnauthorizedError,
 } from '../helpers/apiError'
-import { any } from 'bluebird'
-import { authorize } from 'fbgraph'
+import { createToken, verifyJWT, requireAdminandVerifyJWT } from './auth'
 
 // GET /users
 export const findAll = async (
@@ -22,49 +22,79 @@ export const findAll = async (
   next: NextFunction
 ) => {
   try {
-    console.log('heare')
     res.json(await UserService.findAll())
   } catch (error) {
     next(new NotFoundError('Users not found', error))
   }
 }
 
-//POST /users  -  with schema validation
-// normal way create with email and pass
+// GET /products/:id
+export const findById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    if (req.user._id) {
+      console.log('chek', req.user._id)
+      const user = await User.findById(req.user._id).select([
+        '-password',
+        '-isAdmin',
+        '-isBanned',
+      ])
+      console.log('res', user?._id)
+      res.json(user)
+    }
+  } catch (error) {
+    next(new NotFoundError('Product not found', error))
+  }
+}
+
+//POST /users
 export const createUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { firstname, lastname, email, password, isAdmin, isBanned } = req.body
+    const { firstname, lastname, email, password } = req.body
     const newUser = new User({
       firstname,
       lastname,
       email,
       password,
-      isAdmin,
-      isBanned,
     })
 
-    // ??? This is throw error “No callback function was given”, T_T
-    // bcrypt.genSalt(10, (err, salt) => {
+    // Hash password
+    const salt = await bcrypt.genSalt(10)
+    newUser.password = await bcrypt.hash(password, salt)
 
-    //   bcrypt.hash(newUser.password, salt, (err, hash) => {
-    //     if (err) {
-    //       console.log('e', err)
-    //       throw err
-    //     }
-    //     newUser.password = hash
-    //     newUser
-    //       .save()
-    //       .then((user) => res.json(user))
-    //       .catch((err) => console.log('e2', err))
-    //   })
-    // })
-
+    //Create new user account
     await User.create(newUser)
     res.json(newUser)
+
+    // Create the JWT
+    const data = {
+      newUser: {
+        name: newUser.name,
+        email: newUser.email,
+        id: newUser.id,
+        isAdmin: newUser.isAdmin,
+      },
+    }
+    jwt.sign(
+      data,
+      JWT_SECRET,
+      {
+        expiresIn: '10000000h',
+      },
+      (error, token) => {
+        if (error) throw console.log('jwt is wrong', error)
+        console.log('token Normal', token)
+
+        res.json({ token })
+      }
+    )
   } catch (error) {
     if (error.keyPattern) {
       next(new BadRequestError('Email already exists', error))
@@ -86,19 +116,54 @@ export const loginUser = async (
   res: Response,
   next: NextFunction
 ) => {
-  await check('email', 'Email is not valid').isEmail().run(req)
-  await check('password', 'Minimum of pass letter is 8')
-    .isLength({ min: 8 })
-    .run(req)
+  await check('email', 'Email is not valid').isEmail()
+  await check('password', 'Password is required').exists()
   const errors = validationResult(req)
-
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() })
   }
+  const { email, password } = req.body
+
   try {
-    return res.send(req.body)
+    const user = await User.findOne({ email })
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ errors: [{ message: 'Invalid Credentials' }] })
+    }
+    //CompareJWT
+    const isMatch = await bcrypt.compare(password, user.password)
+
+    if (!isMatch) {
+      return res
+        .status(400)
+        .json({ errors: [{ message: 'Invalid email or password' }] })
+    }
+    //Create the JWT
+    const data = {
+      user: {
+        email: user.email,
+        id: user.id,
+        isAdmin: user.isAdmin,
+      },
+    }
+    jwt.sign(
+      data,
+      JWT_SECRET,
+      {
+        expiresIn: '10000000h',
+      },
+      (error, token) => {
+        if (error) {
+          throw console.log('jwt is wrong', error)
+        }
+        console.log('token Normal', token)
+        res.json({ token })
+      }
+    )
   } catch (error) {
-    next(new BadRequestError('Duplicate email', error))
+    next(new BadRequestError('Invalid email or password', error))
   }
 }
 
@@ -118,54 +183,4 @@ export const logOutUser = async (
   }
 
   return res.send(req.body)
-}
-
-// GET /auth/google
-export const createToken = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    console.log('user', req.user)
-
-    const { name, email, isAdmin } = req.user as UserDocument
-
-    const data = {
-      name,
-      email,
-      isAdmin,
-    }
-
-    const createJWT = await jwt.sign(data, SESSION_SECRET, { expiresIn: '1h' })
-
-    // res.sendStatus(req.user ? 200 : 401)
-    res.json({ createJWT })
-
-    // console.log('user', req.user)
-
-    // const verifyJWT = jwt.verify(createJWT, SESSION_SECRET)
-
-    // const checkAdmin: boolean = verifyJWT.isAdmin
-  } catch (error) {
-    next(new BadRequestError('Duplicate email', error))
-  }
-}
-
-// GET /auth/google
-export const verifyJWT = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const token = req.headers['authorization']?.replace('Bearer ', '') || ''
-    const decoded = jwt.verify(token, SESSION_SECRET) as UserDocument
-    const user = await User.findOne({ email: decoded.email })
-    const checkAdmin = decoded.isAdmin
-    req.user = user as UserDocument
-    next()
-  } catch (error) {
-    next(new BadRequestError('Duplicate email', error))
-  }
 }

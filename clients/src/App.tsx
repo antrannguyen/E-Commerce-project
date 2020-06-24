@@ -1,34 +1,36 @@
-import React, { useState } from 'react'
-import logo from './logo.svg'
+import React from 'react'
 import './App.css'
 import GoogleLogin from 'react-google-login'
 import axios from 'axios'
 
 function App() {
-  const responseGoogle = (response: any) => {
+  const onSuccess = (response: any) => {
     axios
       .post('http://localhost:3000/api/v1/eCommerce/users/auth/google', {
         id_token: response.tokenObj.id_token,
       })
       .then(function (response) {
-        console.log(response)
+        console.log('success', response)
       })
       .catch(function (error) {
         console.log(error)
       })
-    console.log(response)
+    console.log('success2', response)
   }
 
-  const getProducts = async () => {
+  const onFailure = (error: any) => {
+    console.log(error)
+  }
+
+  const getProducts = async (id_token: any) => {
     const res = await axios.get(
       'http://localhost:3000/api/v1/eCommerce/products',
       {
         headers: {
-          authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW4gVHJhbiIsImVtYWlsIjoiYW4udHJhbkBpbnRlZ3JpZnkuaW8iLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNTkyODM4NTg4LCJleHAiOjE1OTI4NDIxODh9.70zhNZZA6uacBkmcHC870na5fKHB-aUy0XiFwtV727c`,
+          authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW4gVHJhbiIsImVtYWlsIjoiYW4udHJhbkBpbnRlZ3JpZnkuaW8iLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNTkyOTQ1NDEyLCJleHAiOjE5NTI5NDU0MTJ9.bG5rePEQ8olaEDaxfMwcPhpD8sAa9aBApm2ng0rc7DY`,
         },
       }
     )
-    console.log(res)
   }
 
   return (
@@ -38,8 +40,8 @@ function App() {
         <GoogleLogin
           clientId="333233688208-as2rcli62b49cg6ofmh49md6fsqiphnb.apps.googleusercontent.com"
           buttonText="Login"
-          onSuccess={responseGoogle}
-          onFailure={responseGoogle}
+          onSuccess={onSuccess}
+          onFailure={onFailure}
         />
       </div>
       <div>

@@ -1,5 +1,6 @@
 import mongoose, { Document } from 'mongoose'
 import { isEmail } from 'validator'
+import bcrypt from 'bcrypt'
 
 export type UserDocument = Document & {
   id: string;
@@ -8,6 +9,8 @@ export type UserDocument = Document & {
   email: string;
   isAdmin: boolean;
   isBanned: boolean;
+  // passwordConfirmation: String
+  // comparePassword(candidatePassword: string): Promise<boolean>
 }
 
 const userSchema = new mongoose.Schema(
@@ -44,5 +47,17 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 )
+
+// userSchema.methods.comparePassword = function (
+//   candidatePassword: string
+// ): Promise<boolean> {
+//   const password = this.password
+//   return new Promise((resolve, reject) => {
+//     bcrypt.compare(candidatePassword, password, (err: any, success: any) => {
+//       if (err) return reject(err)
+//       return resolve(success)
+//     })
+//   })
+// }
 
 export default mongoose.model<UserDocument>('User', userSchema)

@@ -15,7 +15,7 @@ export const findAll = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log('body', req.user)
+  // console.log('body', req.user)
   try {
     res.json(await ProductService.findAll())
   } catch (error) {

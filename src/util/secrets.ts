@@ -13,8 +13,9 @@ if (fs.existsSync('.env')) {
 export const ENVIRONMENT = process.env.NODE_ENV
 const prod = ENVIRONMENT === 'production' // Anything else is treated as 'dev'
 
+export const CLIENT_ID = process.env['CLIENT_ID'] as string
 export const SESSION_SECRET = process.env['SESSION_SECRET'] as string
-export const JWT_SECRET = process.env['SESSION_SECRET'] as string
+export const JWT_SECRET = process.env['JWT_SECRET'] as string
 export const MONGODB_URI = (prod
   ? process.env['MONGODB_URI']
   : process.env['MONGODB_URI_LOCAL']) as string
@@ -38,6 +39,3 @@ if (!MONGODB_URI) {
   }
   process.exit(1)
 }
-
-export const CLIENT_ID =
-  '333233688208-as2rcli62b49cg6ofmh49md6fsqiphnb.apps.googleusercontent.com'
