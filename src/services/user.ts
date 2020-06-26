@@ -53,26 +53,10 @@ function updateOne(
     .exec()
     .then((user) => {
       if (!user) {
-        throw new Error(`ID ${userID} not found`)
+        throw new Error(`User ${userID} not found`)
       }
-
-      if (update.name) {
-        user.name = update.name
-      }
-      if (update.firstname) {
-        user.firstname = update.firstname
-      }
-      if (update.lastname) {
-        user.lastname = update.lastname
-      }
-      if (update.password) {
-        user.password = update.password
-      }
-      if (update.email) {
-        user.email = update.email
-      }
-
-      // Add more fields here if needed
+      const key = Object.keys(update)
+      key.forEach((key) => (user[key] = update[key]))
       return user.save()
     })
 }
