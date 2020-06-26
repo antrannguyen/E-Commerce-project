@@ -49,7 +49,7 @@ export const verifyJWT = async (
   // const token = req.header('x-auth-token')
   const token = req.headers['authorization']?.replace('Bearer ', '') || ''
   if (!token) {
-    return new UnauthorizedError('No token, authorization denied', error)
+    return next(new UnauthorizedError('No token, authorization denied', error))
   }
   try {
     //Verify token

@@ -45,9 +45,42 @@ async function findEmailandCreate(
   }
 }
 
+function updateOne(
+  userID: string,
+  update: Partial<UserDocument>
+): Promise<UserDocument> {
+  return User.findById(userID)
+    .exec()
+    .then((user) => {
+      if (!user) {
+        throw new Error(`ID ${userID} not found`)
+      }
+
+      if (update.name) {
+        user.name = update.name
+      }
+      if (update.firstname) {
+        user.firstname = update.firstname
+      }
+      if (update.lastname) {
+        user.lastname = update.lastname
+      }
+      if (update.password) {
+        user.password = update.password
+      }
+      if (update.email) {
+        user.email = update.email
+      }
+
+      // Add more fields here if needed
+      return user.save()
+    })
+}
+
 export default {
   findAll,
   findById,
   create,
   findEmailandCreate,
+  updateOne,
 }

@@ -14,6 +14,7 @@ import {
   UnauthorizedError,
 } from '../helpers/apiError'
 import { createToken, verifyJWT, requireAdminandVerifyJWT } from './auth'
+import { runInNewContext } from 'vm'
 
 // GET /users
 export const findAll = async (
@@ -116,15 +117,8 @@ export const loginUser = async (
   res: Response,
   next: NextFunction
 ) => {
-  await check('email', 'Email is not valid').isEmail()
-  await check('password', 'Password is required').exists()
-  const errors = validationResult(req)
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() })
-  }
-  const { email, password } = req.body
-
   try {
+    const { email, password } = req.body
     const user = await User.findOne({ email })
 
     if (!user) {
@@ -158,7 +152,6 @@ export const loginUser = async (
         if (error) {
           throw console.log('jwt is wrong', error)
         }
-        console.log('token Normal', token)
         res.json({ token })
       }
     )
@@ -173,14 +166,24 @@ export const logOutUser = async (
   res: Response,
   next: NextFunction
 ) => {
-  await check('email', 'Email is not valid').isEmail().run(req)
-  await check('password', 'Minimum of pass letter is 8')
-    .isLength({ min: 8 })
-    .run(req)
-  const errors = validationResult(req)
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() })
-  }
+  req.logOut()
+  res.redirect('/')
+}
 
-  return res.send(req.body)
+//PUT /users/updateProfile
+export const updateProfile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { email } = req.body
+    const user = await User.findOne({ email })
+    const userID = user?._id
+
+    await UserService.updateOne(userID, req.body)
+    res.json(req.body)
+  } catch (error) {
+    next(new NotFoundError('User not found', error))
+  }
 }

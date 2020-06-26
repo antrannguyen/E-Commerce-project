@@ -5,12 +5,12 @@ import bcrypt from 'bcrypt'
 export type UserDocument = Document & {
   id: string;
   name: string;
+  firstname: string;
+  lastname: string;
   password: string;
   email: string;
   isAdmin: boolean;
   isBanned: boolean;
-  // passwordConfirmation: String
-  // comparePassword(candidatePassword: string): Promise<boolean>
 }
 
 const userSchema = new mongoose.Schema(
@@ -19,6 +19,12 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
     name: {
+      type: String,
+    },
+    firstname: {
+      type: String,
+    },
+    lastname: {
       type: String,
     },
     email: {
@@ -47,17 +53,5 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 )
-
-// userSchema.methods.comparePassword = function (
-//   candidatePassword: string
-// ): Promise<boolean> {
-//   const password = this.password
-//   return new Promise((resolve, reject) => {
-//     bcrypt.compare(candidatePassword, password, (err: any, success: any) => {
-//       if (err) return reject(err)
-//       return resolve(success)
-//     })
-//   })
-// }
 
 export default mongoose.model<UserDocument>('User', userSchema)

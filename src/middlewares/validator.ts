@@ -4,9 +4,18 @@ import { body, validationResult } from 'express-validator'
 export const userValidationRules = () => {
   return [
     // must have an email
-    body('email').isEmail(),
-    //pass at least 8 chars long
-    body('password').isLength({ min: 8 }),
+    body('email', 'Email is not valid').isEmail(),
+    //must have password
+    body('password', 'Minimum of pass letter is 8').exists(),
+  ]
+}
+
+export const userValidationRegisterUser = () => {
+  return [
+    // must have an email
+    body('email', 'Email is not valid').isEmail(),
+    //must have password
+    body('password', 'Password is required').exists(),
   ]
 }
 
