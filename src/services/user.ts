@@ -4,17 +4,17 @@ function findAll(): Promise<UserDocument[]> {
   return User.find().exec() // Return a Promise
 }
 
-function findById(id: string): Promise<UserDocument> {
-  console.log('servoce', id)
-  return User.findById(id)
-    .exec() // .exec() will return a true Promise
-    .then((id) => {
-      if (!id) {
-        throw new Error(`User ${id} not found`)
-      }
-      return id
-    })
-}
+// function findById(id: string): Promise<UserDocument> {
+//   console.log('servoce', id)
+//   return User.findById(id)
+//     .exec() // .exec() will return a true Promise
+//     .then((id) => {
+//       if (!id) {
+//         throw new Error(`User ${id} not found`)
+//       }
+//       return id
+//     })
+// }
 
 function create(newUser: UserDocument): Promise<UserDocument> {
   return newUser.save()
@@ -63,7 +63,7 @@ function updateOne(
 
 export default {
   findAll,
-  findById,
+  // findById,
   create,
   findEmailandCreate,
   updateOne,

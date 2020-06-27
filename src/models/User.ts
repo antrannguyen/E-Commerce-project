@@ -1,6 +1,5 @@
 import mongoose, { Document } from 'mongoose'
-import { isEmail } from 'validator'
-import bcrypt from 'bcrypt'
+// import { isEmail } from 'validator'
 
 export type UserDocument = Document & {
   id: string;
@@ -12,6 +11,13 @@ export type UserDocument = Document & {
   isAdmin: boolean;
   isBanned: boolean;
 }
+
+// export type Validator = {
+//   isEmail: boolean
+//   message: string
+// }
+
+// const validate: Validator = { validator: isEmail, message: 'Invalid email' }
 
 const userSchema = new mongoose.Schema(
   {
@@ -34,7 +40,8 @@ const userSchema = new mongoose.Schema(
       required: [true, 'Email is required'],
       lowercase: true,
       //this is the other validate way with mongoose, i just wanna try it, but i apply express validator
-      validate: { validator: isEmail, message: 'Invalid email' },
+      // validate: { validator: isEmail, message: 'Invalid email' },
+      // validate: [isEmail, 'Invalid email'],
     },
     password: {
       type: String,

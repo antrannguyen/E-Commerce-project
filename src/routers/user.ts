@@ -3,7 +3,7 @@ import passport from 'passport'
 
 import {
   findAll,
-  findById,
+  // findById,
   createUser,
   updateProfile,
   loginUser,
@@ -25,7 +25,7 @@ router.post(
   createToken
 )
 router.get('/', verifyJWT, findAll)
-router.get('/:id', verifyJWT, findById)
+// router.get('/:id', verifyJWT, findById)
 router.post('/', createUser)
 router.post('/login', validate(userValidationRules()), loginUser) // with email and pass
 router.get('/logout', verifyJWT, logOutUser)

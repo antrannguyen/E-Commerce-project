@@ -45,20 +45,17 @@ export const verifyJWT = async (
   res: Response,
   next: NextFunction
 ) => {
-  // Get token from the headers
-  // const token = req.header('x-auth-token')
   const token = req.headers['authorization']?.replace('Bearer ', '') || ''
-  if (!token) {
-    return next(new UnauthorizedError('No token, authorization denied', error))
-  }
   try {
-    //Verify token
-    const decoded = jwt.verify(token, JWT_SECRET) as UserDocument
-    const user = await User.findOne(decoded.email)
-    req.user = user as UserDocument
-    next()
+    if (token) {
+      //Verify token
+      const decoded = jwt.verify(token, JWT_SECRET) as UserDocument
+      const user = await User.findOne(decoded.email)
+      req.user = user as UserDocument
+      next()
+    }
   } catch (error) {
-    next(new UnauthorizedError('Token is not valid', error))
+    next(new UnauthorizedError('No token, authorization denied', error))
   }
 }
 
@@ -69,9 +66,6 @@ export const requireAdminandVerifyJWT = async (
   next: NextFunction
 ) => {
   const token = req.headers['authorization']?.replace('Bearer ', '') || ''
-  if (!token) {
-    return new UnauthorizedError('No token, authorization denied', error)
-  }
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as UserDocument
     const user = await User.findOne({ email: decoded.email })
