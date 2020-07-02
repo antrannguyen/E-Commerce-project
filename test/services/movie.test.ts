@@ -46,7 +46,7 @@ describe('movie service', () => {
   // how to test async code, especially with error
   it('should not get a non-existing movie', async () => {
     expect.assertions(1)
-    return MovieService.findById(nonExistingMovieId).catch(e => {
+    return MovieService.findById(nonExistingMovieId).catch((e) => {
       expect(e.message).toMatch(`Movie ${nonExistingMovieId} not found`)
     })
   })
@@ -69,7 +69,7 @@ describe('movie service', () => {
       name: 'Shrek',
       publishedYear: 2001,
     }
-    return MovieService.update(nonExistingMovieId, update).catch(e => {
+    return MovieService.update(nonExistingMovieId, update).catch((e) => {
       expect(e.message).toMatch(`Movie ${nonExistingMovieId} not found`)
     })
   })
@@ -78,7 +78,7 @@ describe('movie service', () => {
     expect.assertions(1)
     const movie = await createMovie()
     await MovieService.deleteMovie(movie._id)
-    return MovieService.findById(movie._id).catch(e => {
+    return MovieService.findById(movie._id).catch((e) => {
       expect(e.message).toBe(`Movie ${movie._id} not found`)
     })
   })

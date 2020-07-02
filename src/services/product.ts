@@ -7,15 +7,15 @@ function findAll(): Promise<ProductDocument[]> {
 function findByQuery(
   getQuery: Partial<ProductDocument>
 ): Promise<ProductDocument[]> {
-  console.log('131424', getQuery)
-
   return Product.find(getQuery)
     .exec() // .exec() will return a true Promise
     .then((products) => {
+      console.log('product Service', products)
       if (!products) {
-        throw new Error(`Product ${products} not found`)
+        console.log('product Service2', products)
+
+        throw new Error('Product not found')
       }
-      console.log('fsfagsg', products)
       return products
     })
 }
@@ -25,7 +25,7 @@ function findById(id: string): Promise<ProductDocument> {
     .exec() // .exec() will return a true Promise
     .then((id) => {
       if (!id) {
-        throw new Error(`Product ${id} not found`)
+        throw new Error('Product not found')
       }
       return id
     })
@@ -43,17 +43,19 @@ function updateProduct(
     .exec()
     .then((product) => {
       if (!product) {
-        throw new Error(`Product ${productId} not found`)
+        throw new Error('Product not found')
       }
       if (update.name) {
-        product.name === update.name
+        product.name = update.name
       }
       if (update.category) {
-        product.category === update.category
+        product.category = update.category
       }
       if (update.variant) {
-        product.variant === update.variant
+        product.variant = update.variant
       }
+      // const key = Object.keys(update)
+      // key.forEach((key) => (product[key] = update[key]))
       return product.save()
     })
 }

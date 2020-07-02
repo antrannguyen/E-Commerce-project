@@ -32,6 +32,7 @@ export const findByQuery = async (
     const query = req.query
     // const getQuery = await Product.find({ id: query })
     res.json(await ProductService.findByQuery(query))
+    console.log('query', req.query)
   } catch (error) {
     next(new NotFoundError('Products not found', error))
   }
@@ -44,9 +45,10 @@ export const findById = async (
   next: NextFunction
 ) => {
   try {
+    console.log('params', req.params.id)
     res.json(await ProductService.findById(req.params.id))
   } catch (error) {
-    next(new NotFoundError('Product not found', error))
+    next(new NotFoundError(`Product ${req.params.id} not found`, error))
   }
 }
 
@@ -57,7 +59,7 @@ export const createProduct = async (
   next: NextFunction
 ) => {
   try {
-    const { name, category, variant } = req.body
+    const { id, name, category, variant } = req.body
 
     const foundName = await Product.findOne({ name: req.body.name })
     if (!foundName) {

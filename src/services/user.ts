@@ -4,18 +4,6 @@ function findAll(): Promise<UserDocument[]> {
   return User.find().exec() // Return a Promise
 }
 
-// function findById(id: string): Promise<UserDocument> {
-//   console.log('servoce', id)
-//   return User.findById(id)
-//     .exec() // .exec() will return a true Promise
-//     .then((id) => {
-//       if (!id) {
-//         throw new Error(`User ${id} not found`)
-//       }
-//       return id
-//     })
-// }
-
 function create(newUser: UserDocument): Promise<UserDocument> {
   return newUser.save()
 }
@@ -55,8 +43,8 @@ function updateOne(
       if (!user) {
         throw new Error(`User ${userID} not found`)
       }
-      const key = Object.keys(update)
-      key.forEach((key) => (user[key] = update[key]))
+      // const key = Object.keys(update)
+      // key.forEach((key) => (user[key] = update[key]))
       return user.save()
     })
 }

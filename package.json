@@ -54,7 +54,7 @@
     "mongodb-memory-server": "^6.3.1",
     "mongoose": "^5.9.2",
     "morgan": "^1.10.0",
-    "nodemailer": "^6.4.3",
+    "nodemailer": "^6.4.10",
     "passport": "^0.4.1",
     "passport-facebook": "^3.0.0",
     "passport-google-id-token": "^0.4.7",

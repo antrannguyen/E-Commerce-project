@@ -29,28 +29,6 @@ export const findAll = async (
   }
 }
 
-// GET /products/:id
-// export const findById = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     if (req.user._id) {
-//       console.log('chek', req.user._id)
-//       const user = await User.findById(req.user._id).select([
-//         '-password',
-//         '-isAdmin',
-//         '-isBanned',
-//       ])
-//       console.log('res', user?._id)
-//       res.json(user)
-//     }
-//   } catch (error) {
-//     next(new NotFoundError('Product not found', error))
-//   }
-// }
-
 //POST /users
 export const createUser = async (
   req: Request,
@@ -159,6 +137,13 @@ export const loginUser = async (
     next(new BadRequestError('Invalid email or password', error))
   }
 }
+
+// POST /users/forgot
+// export const forgetPassRequest = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {}
 
 // POST /users/logout
 export const logOutUser = async (

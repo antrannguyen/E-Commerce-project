@@ -8,13 +8,18 @@ import {
   updateProfile,
   loginUser,
   logOutUser,
+  forgetPassRequest,
 } from '../controllers/user'
 import {
   createToken,
   verifyJWT,
   requireAdminandVerifyJWT,
 } from '../controllers/auth'
-import { userValidationRules, validate } from '../middlewares/validator'
+import {
+  userValidationRules,
+  validate,
+  forgotPassValidate,
+} from '../middlewares/validator'
 
 const router = express.Router()
 
@@ -25,7 +30,6 @@ router.post(
   createToken
 )
 router.get('/', verifyJWT, findAll)
-// router.get('/:id', verifyJWT, findById)
 router.post('/', createUser)
 router.post('/login', validate(userValidationRules()), loginUser) // with email and pass
 router.get('/logout', verifyJWT, logOutUser)
@@ -35,7 +39,7 @@ router.put(
   verifyJWT,
   updateProfile
 )
-// router.post('/', forgetPassRequest)
+router.post('/forgot', validate(forgotPassValidate()), forgetPassRequest)
 // router.put('/', changePass)
 // router.put('/:id', banUser)
 

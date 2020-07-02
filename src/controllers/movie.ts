@@ -75,7 +75,7 @@ export const findById = async (
   try {
     res.json(await MovieService.findById(req.params.movieId))
   } catch (error) {
-    next(new NotFoundError('Movie not found', error))
+    next(new NotFoundError(`Movie ${req.params.movieId} not found`, error))
   }
 }
 

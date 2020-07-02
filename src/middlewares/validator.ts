@@ -10,6 +10,15 @@ export const userValidationRules = () => {
   ]
 }
 
+export const forgotPassValidate = () => {
+  return [
+    // must have an email
+    body('email', 'Email is not valid').isEmail(),
+    //must have password
+    body('email', 'Please enter a valid email address').exists(),
+  ]
+}
+
 export const userValidationRegisterUser = () => {
   return [
     // must have an email
